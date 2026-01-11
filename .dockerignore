@@ -11,3 +11,10 @@ yarn-debug.log*
 yarn-error.log*
 .DS_Store
 *.pem
+.vscode
+.idea
+*.log
+coverage
+.vercel
+dist
+build
