@@ -1,6 +1,7 @@
 import OpenAI from 'openai';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import Anthropic from '@anthropic-ai/sdk';
+import { prisma } from '../db/client';
 
 export type AIPrompt = {
   role: 'user' | 'assistant' | 'system';
@@ -16,26 +17,70 @@ class AIClient {
   private openai: OpenAI | null = null;
   private gemini: GoogleGenerativeAI | null = null;
   private claude: Anthropic | null = null;
+  private apiKeys: {
+    openai?: string;
+    gemini?: string;
+    claude?: string;
+  } = {};
 
   constructor() {
-    // Initialize OpenAI
+    this.initializeFromEnv();
+  }
+
+  private async initializeFromEnv() {
+    // Initialize from environment variables
     if (process.env.OPENAI_API_KEY) {
+      this.apiKeys.openai = process.env.OPENAI_API_KEY;
       this.openai = new OpenAI({
         apiKey: process.env.OPENAI_API_KEY,
       });
     }
 
-    // Initialize Gemini
     if (process.env.GOOGLE_GEMINI_API_KEY) {
+      this.apiKeys.gemini = process.env.GOOGLE_GEMINI_API_KEY;
       this.gemini = new GoogleGenerativeAI(process.env.GOOGLE_GEMINI_API_KEY);
     }
 
-    // Initialize Claude
     if (process.env.ANTHROPIC_API_KEY) {
+      this.apiKeys.claude = process.env.ANTHROPIC_API_KEY;
       this.claude = new Anthropic({
         apiKey: process.env.ANTHROPIC_API_KEY,
       });
     }
+
+    // Also try to load from database settings
+    await this.loadFromDatabase();
+  }
+
+  private async loadFromDatabase() {
+    try {
+      const settings = await prisma.adminSetting.findMany({
+        where: {
+          key: {
+            in: ['OPENAI_API_KEY', 'GOOGLE_GEMINI_API_KEY', 'ANTHROPIC_API_KEY'],
+          },
+        },
+      });
+
+      for (const setting of settings) {
+        if (setting.key === 'OPENAI_API_KEY' && setting.value && !this.apiKeys.openai) {
+          this.apiKeys.openai = setting.value;
+          this.openai = new OpenAI({ apiKey: setting.value });
+        } else if (setting.key === 'GOOGLE_GEMINI_API_KEY' && setting.value && !this.apiKeys.gemini) {
+          this.apiKeys.gemini = setting.value;
+          this.gemini = new GoogleGenerativeAI(setting.value);
+        } else if (setting.key === 'ANTHROPIC_API_KEY' && setting.value && !this.apiKeys.claude) {
+          this.apiKeys.claude = setting.value;
+          this.claude = new Anthropic({ apiKey: setting.value });
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load API keys from database:', error);
+    }
+  }
+
+  async refreshApiKeys() {
+    await this.loadFromDatabase();
   }
 
   async generateText(
@@ -46,6 +91,9 @@ class AIClient {
       maxTokens?: number;
     }
   ): Promise<AIResponse> {
+    // Refresh API keys before generating
+    await this.refreshApiKeys();
+
     const messages: AIPrompt[] = [];
     if (systemPrompt) {
       messages.push({ role: 'system', content: systemPrompt });
@@ -126,6 +174,8 @@ class AIClient {
     systemPrompt?: string,
     onChunk?: (chunk: string) => void
   ): Promise<string> {
+    await this.refreshApiKeys();
+
     const messages: AIPrompt[] = [];
     if (systemPrompt) {
       messages.push({ role: 'system', content: systemPrompt });

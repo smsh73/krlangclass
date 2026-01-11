@@ -49,6 +49,34 @@ npx prisma migrate dev
 npm run dev
 ```
 
+5. Create admin user (optional):
+```bash
+npm run create-admin
+```
+
+6. Seed sample documents (optional):
+```bash
+npm run seed-docs
+```
+
+7. Verify database schema:
+```bash
+npm run verify-schema
+```
+
+## Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run db:migrate` - Run database migrations
+- `npm run db:generate` - Generate Prisma client
+- `npm run db:studio` - Open Prisma Studio
+- `npm run create-admin` - Create admin user
+- `npm run seed-docs` - Seed sample documents
+- `npm run verify-schema` - Verify database schema
+
 ## Deployment
 
 ### Azure Deployment

@@ -59,7 +59,7 @@ export default function SpeakingGamePage() {
       const response = await fetch('/api/auth/me');
       const data = await response.json();
       if (data.user) {
-        const progressResponse = await fetch(`/api/games/progress?gameType=speaking&userId=${data.user.id}`);
+        const progressResponse = await fetch('/api/games/progress?gameType=speaking');
         const progressData = await progressResponse.json();
         if (progressData.level) {
           setLevel(progressData.level);

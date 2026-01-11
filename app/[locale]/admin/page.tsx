@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -9,6 +10,8 @@ import { DocumentUpload } from '@/components/Admin/DocumentUpload';
 import { CurriculumList } from '@/components/Admin/CurriculumList';
 
 export default function AdminPage() {
+  const router = useRouter();
+  const locale = typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : 'en';
   const [activeTab, setActiveTab] = useState<'curriculum' | 'generate' | 'upload' | 'settings'>('curriculum');
   const [apiKeys, setApiKeys] = useState({
     openai: '',
@@ -17,8 +20,23 @@ export default function AdminPage() {
   });
 
   useEffect(() => {
-    loadSettings();
+    checkAuth();
   }, []);
+
+  const checkAuth = async () => {
+    try {
+      const response = await fetch('/api/admin/auth/me');
+      const data = await response.json();
+      if (!data.admin) {
+        router.push(`/${locale}/admin/login`);
+        return;
+      }
+      loadSettings();
+    } catch (error) {
+      console.error('Auth check error:', error);
+      router.push(`/${locale}/admin/login`);
+    }
+  };
 
   const loadSettings = async () => {
     try {
@@ -38,7 +56,7 @@ export default function AdminPage() {
 
   const handleSaveSettings = async () => {
     try {
-      await fetch('/api/admin/settings', {
+      const response = await fetch('/api/admin/settings', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -47,19 +65,37 @@ export default function AdminPage() {
           ANTHROPIC_API_KEY: apiKeys.claude,
         }),
       });
-      alert('Settings saved');
+      if (response.ok) {
+        alert('Settings saved successfully!');
+      } else {
+        alert('Failed to save settings');
+      }
     } catch (error) {
       console.error('Save settings error:', error);
       alert('Failed to save settings');
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/auth/logout', { method: 'POST' });
+      router.push(`/${locale}/admin/login`);
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4">
       <div className="max-w-7xl mx-auto py-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-center mb-8 text-gray-900 dark:text-white">
-          Admin Panel
-        </h1>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white">
+            Admin Panel
+          </h1>
+          <Button variant="secondary" onClick={handleLogout}>
+            Logout
+          </Button>
+        </div>
 
         {/* Tabs */}
         <div className="flex flex-wrap gap-2 mb-6 justify-center">

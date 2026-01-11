@@ -41,7 +41,7 @@ export default function TypingGamePage() {
       const data = await response.json();
       if (data.user) {
         // Check existing progress
-        const progressResponse = await fetch(`/api/games/progress?gameType=typing&userId=${data.user.id}`);
+        const progressResponse = await fetch('/api/games/progress?gameType=typing');
         const progressData = await progressResponse.json();
         if (progressData.level) {
           setLevel(progressData.level);

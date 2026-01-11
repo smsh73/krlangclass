@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
 
     const latestScore = await prisma.gameScore.findFirst({
       where: {
-        userId,
+        userId: user.id,
         gameType,
       },
       orderBy: {

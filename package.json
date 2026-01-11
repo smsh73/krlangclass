@@ -7,7 +7,13 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:generate": "prisma generate",
+    "db:studio": "prisma studio",
+    "create-admin": "tsx scripts/create-admin.ts",
+    "seed-docs": "tsx scripts/seed-sample-docs.ts",
+    "verify-schema": "tsx scripts/verify-schema.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",

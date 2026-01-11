@@ -1,25 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCurrentUser } from '@/lib/auth/session';
+import { getCurrentAdmin } from '@/lib/auth/admin';
 import { prisma } from '@/lib/db/client';
 import { parseDocument } from '@/lib/document/parser';
 import { getAIClient } from '@/lib/ai/client';
 
-// Check if user is admin (simplified - should check admin_users table)
-async function isAdmin(userId: string): Promise<boolean> {
-  const adminUser = await prisma.adminUser.findFirst({
-    where: { id: userId },
-  });
-  return !!adminUser;
-}
-
 export async function POST(request: NextRequest) {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
+    const admin = await getCurrentAdmin();
+    if (!admin) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
-
-    // For now, allow any authenticated user to upload (can be restricted later)
     const formData = await request.formData();
     const file = formData.get('file') as File;
 
@@ -111,8 +101,8 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const user = await getCurrentUser();
-    if (!user) {
+    const admin = await getCurrentAdmin();
+    if (!admin) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

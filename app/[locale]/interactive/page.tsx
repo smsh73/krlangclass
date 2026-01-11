@@ -127,7 +127,11 @@ export default function InteractivePage() {
   };
 
   const handleSendMessage = async (message: string) => {
-    if (!sessionId) return;
+    if (!sessionId) {
+      // If no session, start a new conversation
+      await handleStartConversation();
+      return;
+    }
 
     if (message) {
       setMessages((prev) => [...prev, { role: 'user', content: message }]);
@@ -149,9 +153,13 @@ export default function InteractivePage() {
       if (data.message) {
         setMessages((prev) => [...prev, { role: 'assistant', content: data.message }]);
         speakMessage(data.message);
+      } else if (data.error) {
+        console.error('API error:', data.error);
+        alert('An error occurred. Please try again.');
       }
     } catch (error) {
       console.error('Send message error:', error);
+      alert('Failed to send message. Please try again.');
     }
   };
 
