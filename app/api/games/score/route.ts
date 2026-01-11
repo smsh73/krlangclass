@@ -18,6 +18,30 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate gameType
+    if (gameType !== 'typing' && gameType !== 'speaking') {
+      return NextResponse.json(
+        { error: 'Invalid gameType. Must be "typing" or "speaking"' },
+        { status: 400 }
+      );
+    }
+
+    // Validate level range
+    if (level < 1 || level > 10) {
+      return NextResponse.json(
+        { error: 'Level must be between 1 and 10' },
+        { status: 400 }
+      );
+    }
+
+    // Validate score
+    if (score < 0) {
+      return NextResponse.json(
+        { error: 'Score must be non-negative' },
+        { status: 400 }
+      );
+    }
+
     const gameScore = await prisma.gameScore.create({
       data: {
         userId: user.id,

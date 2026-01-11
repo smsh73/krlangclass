@@ -19,6 +19,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate difficulty
+    const validDifficulties = ['Beginner', 'Intermediate', 'Professional'];
+    if (!validDifficulties.includes(difficulty)) {
+      return NextResponse.json(
+        { error: `Difficulty must be one of: ${validDifficulties.join(', ')}` },
+        { status: 400 }
+      );
+    }
+
+    // Validate topic (should be non-empty string)
+    if (typeof topic !== 'string' || topic.trim().length === 0) {
+      return NextResponse.json(
+        { error: 'Topic must be a non-empty string' },
+        { status: 400 }
+      );
+    }
+
     const aiClient = getAIClient();
     const systemPrompt = `You are a Korean language conversation tutor. You are having a conversation with a student learning Korean.
     

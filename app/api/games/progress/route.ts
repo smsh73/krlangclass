@@ -1,15 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getCurrentUser } from '@/lib/auth/session';
 import { prisma } from '@/lib/db/client';
 
 export async function GET(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams;
-    const gameType = searchParams.get('gameType');
-    const userId = searchParams.get('userId');
+    const user = await getCurrentUser();
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
 
-    if (!gameType || !userId) {
+    const searchParams = request.nextUrl.searchParams;
+    const gameType = searchParams.get('gameType') || 'typing';
+
+    if (!gameType) {
       return NextResponse.json(
-        { error: 'Missing parameters' },
+        { error: 'Missing gameType parameter' },
         { status: 400 }
       );
     }

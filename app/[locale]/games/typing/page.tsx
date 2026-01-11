@@ -73,6 +73,10 @@ export default function TypingGamePage() {
   const handleLevelComplete = async () => {
     try {
       const response = await fetch('/api/auth/me');
+      if (!response.ok) {
+        throw new Error('Authentication failed');
+      }
+      
       const data = await response.json();
       if (!data.user) {
         router.push('/en/login');
@@ -80,7 +84,7 @@ export default function TypingGamePage() {
       }
 
       // Save score
-      await fetch('/api/games/score', {
+      const scoreResponse = await fetch('/api/games/score', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -90,6 +94,11 @@ export default function TypingGamePage() {
           wordsCompleted: words.length,
         }),
       });
+
+      if (!scoreResponse.ok) {
+        const errorData = await scoreResponse.json();
+        throw new Error(errorData.error || 'Failed to save score');
+      }
 
       if (level < 10) {
         // Next level
@@ -102,8 +111,9 @@ export default function TypingGamePage() {
         setCompleted(true);
         setCrownEarned(true);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Level complete error:', error);
+      alert(`Error: ${error.message || 'Failed to complete level'}`);
     }
   };
 

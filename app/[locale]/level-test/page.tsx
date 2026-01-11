@@ -27,10 +27,19 @@ export default function LevelTestPage() {
   const loadTest = async () => {
     try {
       const response = await fetch('/api/level-test');
+      if (!response.ok) {
+        throw new Error('Failed to load test');
+      }
+      
       const data = await response.json();
-      setQuestions(data.questions || []);
-    } catch (error) {
+      if (!data.questions || !Array.isArray(data.questions)) {
+        throw new Error('Invalid test data format');
+      }
+      
+      setQuestions(data.questions);
+    } catch (error: any) {
       console.error('Load test error:', error);
+      alert(`Error loading test: ${error.message || 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
@@ -50,12 +59,20 @@ export default function LevelTestPage() {
         body: JSON.stringify({ questions, answers }),
       });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit test');
+      }
+
       const data = await response.json();
       if (data.success) {
         setResult(data);
+      } else {
+        throw new Error(data.error || 'Test submission failed');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Submit test error:', error);
+      alert(`Error: ${error.message || 'Failed to submit test'}`);
     } finally {
       setSubmitting(false);
     }

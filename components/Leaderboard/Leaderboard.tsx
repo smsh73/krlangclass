@@ -21,10 +21,19 @@ export function Leaderboard() {
   const fetchLeaderboard = async () => {
     try {
       const response = await fetch('/api/games/leaderboard');
+      if (!response.ok) {
+        throw new Error('Failed to fetch leaderboard');
+      }
+      
       const data = await response.json();
-      setEntries(data.entries || []);
+      if (!data.entries || !Array.isArray(data.entries)) {
+        setEntries([]);
+      } else {
+        setEntries(data.entries);
+      }
     } catch (error) {
       console.error('Failed to fetch leaderboard:', error);
+      setEntries([]);
     } finally {
       setLoading(false);
     }

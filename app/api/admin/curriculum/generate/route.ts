@@ -19,6 +19,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate difficulty
+    const validDifficulties = ['Beginner', 'Intermediate', 'Professional'];
+    if (!validDifficulties.includes(difficulty)) {
+      return NextResponse.json(
+        { error: `Difficulty must be one of: ${validDifficulties.join(', ')}` },
+        { status: 400 }
+      );
+    }
+
+    // Validate topic
+    if (typeof topic !== 'string' || topic.trim().length === 0) {
+      return NextResponse.json(
+        { error: 'Topic must be a non-empty string' },
+        { status: 400 }
+      );
+    }
+
+    // Validate topic length
+    if (topic.length > 200) {
+      return NextResponse.json(
+        { error: 'Topic must be 200 characters or less' },
+        { status: 400 }
+      );
+    }
+
     // Generate curriculum using AI
     const aiClient = getAIClient();
     const systemPrompt = `You are a Korean language curriculum generator. Create a comprehensive Korean language learning curriculum based on the provided information.

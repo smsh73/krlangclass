@@ -100,13 +100,17 @@ export default function SpeakingGamePage() {
   const handleLevelComplete = async () => {
     try {
       const response = await fetch('/api/auth/me');
+      if (!response.ok) {
+        throw new Error('Authentication failed');
+      }
+      
       const data = await response.json();
       if (!data.user) {
         router.push('/en/login');
         return;
       }
 
-      await fetch('/api/games/score', {
+      const scoreResponse = await fetch('/api/games/score', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -117,6 +121,11 @@ export default function SpeakingGamePage() {
         }),
       });
 
+      if (!scoreResponse.ok) {
+        const errorData = await scoreResponse.json();
+        throw new Error(errorData.error || 'Failed to save score');
+      }
+
       if (level < 10) {
         setLevel(level + 1);
         setCurrentWordIndex(0);
@@ -125,8 +134,9 @@ export default function SpeakingGamePage() {
         setCompleted(true);
         setCrownEarned(true);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Level complete error:', error);
+      alert(`Error: ${error.message || 'Failed to complete level'}`);
     }
   };
 

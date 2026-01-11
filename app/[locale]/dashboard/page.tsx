@@ -28,6 +28,11 @@ export default function DashboardPage() {
   const checkAuth = async () => {
     try {
       const response = await fetch('/api/auth/me');
+      
+      if (!response.ok) {
+        throw new Error('Authentication failed');
+      }
+      
       const data = await response.json();
 
       if (!data.user) {
