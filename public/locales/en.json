@@ -1,0 +1,43 @@
+{
+  "common": {
+    "login": "Login",
+    "logout": "Logout",
+    "dashboard": "Dashboard",
+    "welcome": "Welcome",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "submit": "Submit"
+  },
+  "login": {
+    "title": "Login",
+    "firstName": "First Name",
+    "enterFirstName": "Enter your first name",
+    "loginButton": "Login"
+  },
+  "dashboard": {
+    "title": "Korean Learning Dashboard",
+    "interactiveLearning": "Interactive Learning",
+    "games": "Games",
+    "levelTest": "Level Test",
+    "leaderboard": "Leaderboard"
+  },
+  "games": {
+    "typing": "Typing Game",
+    "speaking": "Speaking Game",
+    "level": "Level",
+    "score": "Score"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "curriculum": "Curriculum",
+    "apiKeys": "API Keys",
+    "uploadDocument": "Upload Document",
+    "generateCurriculum": "Generate Curriculum"
+  }
+}

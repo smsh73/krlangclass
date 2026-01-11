@@ -1,0 +1,43 @@
+{
+  "common": {
+    "login": "Log Masuk",
+    "logout": "Log Keluar",
+    "dashboard": "Papan Pemuka",
+    "welcome": "Selamat Datang",
+    "loading": "Memuatkan...",
+    "error": "Ralat",
+    "success": "Berjaya",
+    "cancel": "Batal",
+    "save": "Simpan",
+    "delete": "Padam",
+    "edit": "Edit",
+    "create": "Cipta",
+    "submit": "Hantar"
+  },
+  "login": {
+    "title": "Log Masuk",
+    "firstName": "Nama Pertama",
+    "enterFirstName": "Masukkan nama pertama anda",
+    "loginButton": "Log Masuk"
+  },
+  "dashboard": {
+    "title": "Papan Pemuka Pembelajaran Korea",
+    "interactiveLearning": "Pembelajaran Interaktif",
+    "games": "Permainan",
+    "levelTest": "Ujian Tahap",
+    "leaderboard": "Papan Kedudukan"
+  },
+  "games": {
+    "typing": "Permainan Menaip",
+    "speaking": "Permainan Bercakap",
+    "level": "Tahap",
+    "score": "Skor"
+  },
+  "admin": {
+    "title": "Panel Admin",
+    "curriculum": "Kurikulum",
+    "apiKeys": "Kunci API",
+    "uploadDocument": "Muat Naik Dokumen",
+    "generateCurriculum": "Jana Kurikulum"
+  }
+}

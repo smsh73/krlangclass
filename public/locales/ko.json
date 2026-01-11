@@ -1,0 +1,43 @@
+{
+  "common": {
+    "login": "로그인",
+    "logout": "로그아웃",
+    "dashboard": "대시보드",
+    "welcome": "환영합니다",
+    "loading": "로딩 중...",
+    "error": "오류",
+    "success": "성공",
+    "cancel": "취소",
+    "save": "저장",
+    "delete": "삭제",
+    "edit": "편집",
+    "create": "생성",
+    "submit": "제출"
+  },
+  "login": {
+    "title": "로그인",
+    "firstName": "이름",
+    "enterFirstName": "이름을 입력하세요",
+    "loginButton": "로그인"
+  },
+  "dashboard": {
+    "title": "한국어 학습 대시보드",
+    "interactiveLearning": "대화형 학습",
+    "games": "게임",
+    "levelTest": "레벨 테스트",
+    "leaderboard": "리더보드"
+  },
+  "games": {
+    "typing": "타이핑 게임",
+    "speaking": "말하기 게임",
+    "level": "레벨",
+    "score": "점수"
+  },
+  "admin": {
+    "title": "관리자 패널",
+    "curriculum": "커리큘럼",
+    "apiKeys": "API 키",
+    "uploadDocument": "문서 업로드",
+    "generateCurriculum": "커리큘럼 생성"
+  }
+}
