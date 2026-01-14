@@ -7,7 +7,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -45,7 +44,7 @@ model Curriculum {
   description String?  @db.Text
   content     String   @db.Text
   source      String?  // "document" or "ai_generated"
-  documentId  String?  @map("document_id")
+  documentId  String?  @unique @map("document_id")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
