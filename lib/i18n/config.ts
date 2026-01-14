@@ -7,7 +7,9 @@ export type Locale = (typeof locales)[number];
 export default getRequestConfig(async ({ locale }) => {
   if (!locales.includes(locale as Locale)) notFound();
 
+  const validLocale = locale as Locale;
   return {
-    messages: (await import(`../../public/locales/${locale}.json`)).default
+    locale: validLocale,
+    messages: (await import(`../../public/locales/${validLocale}.json`)).default
   };
 });

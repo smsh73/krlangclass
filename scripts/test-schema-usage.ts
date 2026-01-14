@@ -18,7 +18,7 @@ function parseSchema(): Map<string, SchemaField[]> {
   const fields = new Map<string, SchemaField[]>();
 
   // 모델 파싱
-  const modelRegex = /model\s+(\w+)\s*\{([^}]+)\}/gs;
+  const modelRegex = /model\s+(\w+)\s*\{([^}]+)\}/g;
   let match;
 
   while ((match = modelRegex.exec(content)) !== null) {
